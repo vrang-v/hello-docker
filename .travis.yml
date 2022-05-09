@@ -1,0 +1,22 @@
+language: generic
+sudo:     true
+
+services:
+  - docker
+
+before_install:
+  - docker build --tag $DOCKER_USERNAME/frontend-test:latest --file Dockerfile-dev ./frontend
+
+script:
+  - docker run -e CI=true $DOCKER_USERNAME/frontend-test npm test -- --coverage
+
+after_success:
+  - docker build --tag $DOCKER_USERNAME/frontend:latest ./frontend
+  - docker build --tag $DOCKER_USERNAME/backend:latest  ./backend
+  - docker build --tag $DOCKER_USERNAME/nginx:latest    ./nginx
+
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+  - docker push $DOCKER_USERNAME/frontend
+  - docker push $DOCKER_USERNAME/backend
+  - docker push $DOCKER_USERNAME/nginx
