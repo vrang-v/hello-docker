@@ -8,6 +8,15 @@ const app = express();
 
 app.use(bodyParser.json());
 
+const sql = `CREATE TABLE IF NOT EXISTS lists
+(
+    id    INTEGER AUTO_INCREMENT PRIMARY KEY,
+    value TEXT
+);`
+db.pool.query(sql, (err, results) => {
+    console.log('results', results)
+});
+
 // GET /api/values
 app.get('/api/values', (req, res) => {
     db.pool.query(`SELECT * FROM lists;`, (err, results) => {
