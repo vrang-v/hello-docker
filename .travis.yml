@@ -20,3 +20,15 @@ after_success:
   - docker push $DOCKER_USERNAME/frontend
   - docker push $DOCKER_USERNAME/backend
   - docker push $DOCKER_USERNAME/nginx
+
+deploy:
+  provider:          elasticbeanstalk
+  region:            us-east-1
+  app:               hello-docker
+  env:               Hellodocker-env
+  bucket_name:       elasticbeanstalk-us-east-1-533675935887
+  bucket_path:       hello-docker
+  access_key_id:     $ACCESS_KEY_ID
+  secret_access_key: $SECRET_ACCESS_KEY
+  on:
+    branch: master
